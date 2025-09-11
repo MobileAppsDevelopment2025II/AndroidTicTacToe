@@ -1,0 +1,77 @@
+# =========================
+# Android/Gradle build files
+# =========================
+*.apk
+*.ap_
+*.aab
+*.dex
+*.class
+*.jar
+*.war
+*.ear
+
+# Gradle
+.gradle/
+build/
+*/build/
+
+# Local configuration
+local.properties
+.gradle/
+.gradle/*
+
+# =========================
+# IntelliJ / Android Studio
+# =========================
+.idea/
+*.iml
+*.ipr
+*.iws
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/dictionaries
+.idea/libraries
+.idea/assetWizardSettings.xml
+.idea/gradle.xml
+.idea/assetWizardSettings.xml
+.idea/caches/
+.idea/modules.xml
+
+# =========================
+# OS-specific files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Logs
+# =========================
+*.log
+
+# =========================
+# Keystore files (si tienes firmas locales)
+# =========================
+*.jks
+*.keystore
+
+# =========================
+# Android specific
+# =========================
+captures/
+output.json
+*.hprof
+
+# =========================
+# NDK / CMake build artifacts
+# =========================
+.obj/
+.externalNativeBuild/
+.cxx/
+
+# =========================
+# Misc
+# =========================
+gen/
+bin/
+out/
+
