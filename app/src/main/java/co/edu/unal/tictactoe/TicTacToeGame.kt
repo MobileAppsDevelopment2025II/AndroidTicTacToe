@@ -11,6 +11,13 @@ class TicTacToeGame(private val rng: Random = Random.Default) {
         const val COMPUTER_PLAYER = 'O'
     }
 
+    // ===== Dificultad =====
+    enum class DifficultyLevel { Easy, Harder, Expert }
+
+    private var mDifficultyLevel: DifficultyLevel = DifficultyLevel.Expert
+    fun getDifficultyLevel(): DifficultyLevel = mDifficultyLevel
+    fun setDifficultyLevel(level: DifficultyLevel) { mDifficultyLevel = level }
+
     private val board = CharArray(BOARD_SIZE) { OPEN_SPOT }
 
     fun clearBoard() {
@@ -28,8 +35,50 @@ class TicTacToeGame(private val rng: Random = Random.Default) {
         return true
     }
 
+    // === Selección de jugada según dificultad ===
     fun getComputerMove(): Int {
-        // 1) Ganar si puede
+        return when (mDifficultyLevel) {
+            DifficultyLevel.Easy -> getRandomMove()
+            DifficultyLevel.Harder -> {
+                val win = getWinningMove()
+                if (win != -1) win else getRandomMove()
+            }
+            DifficultyLevel.Expert -> {
+                var move = getWinningMove()
+                if (move == -1) move = getBlockingMove()
+                if (move == -1) move = getRandomMove()
+                move
+            }
+        }
+    }
+
+    // Movimiento aleatorio válido
+    private fun getRandomMove(): Int {
+        // Si no hay huecos, -1
+        var freeCount = 0
+        var i = 0
+        while (i < BOARD_SIZE) {
+            if (board[i] == OPEN_SPOT) freeCount++
+            i++
+        }
+        if (freeCount == 0) return -1
+
+        // Elegir al azar uno de los libres
+        val target = rng.nextInt(freeCount)
+        var seen = 0
+        i = 0
+        while (i < BOARD_SIZE) {
+            if (board[i] == OPEN_SPOT) {
+                if (seen == target) return i
+                seen++
+            }
+            i++
+        }
+        return -1
+    }
+
+    // Ganar si es posible (devuelve índice o -1)
+    private fun getWinningMove(): Int {
         var i = 0
         while (i < BOARD_SIZE) {
             if (board[i] == OPEN_SPOT) {
@@ -40,9 +89,12 @@ class TicTacToeGame(private val rng: Random = Random.Default) {
             }
             i++
         }
+        return -1
+    }
 
-        // 2) Bloquear al humano
-        i = 0
+    // Bloquear al humano si va a ganar (devuelve índice o -1)
+    private fun getBlockingMove(): Int {
+        var i = 0
         while (i < BOARD_SIZE) {
             if (board[i] == OPEN_SPOT) {
                 board[i] = HUMAN_PLAYER
@@ -52,23 +104,7 @@ class TicTacToeGame(private val rng: Random = Random.Default) {
             }
             i++
         }
-
-        // 3) Centro, esquinas, lados
-        val preferred = intArrayOf(4, 0, 2, 6, 8, 1, 3, 5, 7)
-        var j = 0
-        while (j < preferred.size) {
-            val idx = preferred[j]
-            if (board[idx] == OPEN_SPOT) return idx
-            j++
-        }
-
-        // 4) Primer espacio libre
-        i = 0
-        while (i < BOARD_SIZE) {
-            if (board[i] == OPEN_SPOT) return i
-            i++
-        }
-        return 0
+        return -1
     }
 
     /**
@@ -80,41 +116,29 @@ class TicTacToeGame(private val rng: Random = Random.Default) {
             intArrayOf(0, 3, 6), intArrayOf(1, 4, 7), intArrayOf(2, 5, 8), // columnas
             intArrayOf(0, 4, 8), intArrayOf(2, 4, 6)                        // diagonales
         )
-
         var k = 0
         while (k < lines.size) {
-            val line = lines[k]
-            val a = line[0]
-            val b = line[1]
-            val c = line[2]
-
+            val a = lines[k][0]
+            val b = lines[k][1]
+            val c = lines[k][2]
             if (board[a] != OPEN_SPOT && board[a] == board[b] && board[b] == board[c]) {
                 return if (board[a] == HUMAN_PLAYER) 2 else 3
             }
             k++
         }
-
-        // ¿Tablero lleno?
         var filled = true
         var i = 0
         while (i < BOARD_SIZE) {
-            if (board[i] == OPEN_SPOT) {
-                filled = false
-                break
-            }
+            if (board[i] == OPEN_SPOT) { filled = false; break }
             i++
         }
         return if (filled) 1 else 0
     }
 
-    /** Snapshot sin copyOf (compatibilidad total) */
     fun getBoardSnapshot(): CharArray {
         val snap = CharArray(BOARD_SIZE)
         var i = 0
-        while (i < BOARD_SIZE) {
-            snap[i] = board[i]
-            i++
-        }
+        while (i < BOARD_SIZE) { snap[i] = board[i]; i++ }
         return snap
     }
 }

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:gravity="center_horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/about_app_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="12dp" />
+
+    <TextView
+        android:id="@+id/about_author"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="By Christian Tovar"
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:id="@+id/about_motivation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Play smart, enjoy every move!"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:layout_marginBottom="12dp" />
+
+</LinearLayout>
