@@ -141,4 +141,15 @@ class TicTacToeGame(private val rng: Random = Random.Default) {
         while (i < BOARD_SIZE) { snap[i] = board[i]; i++ }
         return snap
     }
+
+    fun getBoardOccupant(index: Int): Char {
+        return if (index >= 0 && index < BOARD_SIZE) {
+            // Devuelve 'X', 'O' o ' ' (OPEN_SPOT)
+            val snap = getBoardSnapshot()
+            snap[index]
+        } else {
+            OPEN_SPOT
+        }
+    }
+
 }
