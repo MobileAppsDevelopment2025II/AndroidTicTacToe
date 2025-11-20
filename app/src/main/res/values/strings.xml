@@ -21,4 +21,30 @@
     <string name="no">No</string>
 
     <string name="about">About</string>
+
+    <string name="menu_online">Online match</string>
+
+    <string name="online_title">Online Game</string>
+    <string name="online_signing_in">Signing in…</string>
+    <string name="online_choose_action">Create or join a game to start</string>
+    <string name="online_signin_error">Error signing in</string>
+    <string name="online_creating">Creating game…</string>
+    <string name="online_searching">Searching game…</string>
+    <string name="online_search_error">Search error</string>
+    <string name="online_not_found">Game not found or already started</string>
+
+    <!-- Mensajes de estado sencillos, sin placeholders -->
+    <string name="online_waiting">Share this code and wait for the other player.</string>
+    <string name="online_code_label">Code:</string>
+    <string name="online_your_turn">Your turn</string>
+    <string name="online_other_turn">Opponent turn</string>
+    <string name="online_draw">Draw!</string>
+    <string name="online_you_win">You win!</string>
+    <string name="online_you_lose">You lose!</string>
+
+    <string name="online_join_hint">Enter code</string>
+    <string name="online_create_button">Create game</string>
+    <string name="online_join_button">Join</string>
+
+
 </resources>

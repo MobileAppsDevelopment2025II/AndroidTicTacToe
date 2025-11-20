@@ -61,6 +61,8 @@ captures/
 output.json
 *.hprof
 
+google-services.json
+
 # =========================
 # NDK / CMake build artifacts
 # =========================

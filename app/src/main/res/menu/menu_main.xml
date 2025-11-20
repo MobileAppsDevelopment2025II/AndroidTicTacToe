@@ -19,4 +19,10 @@
         android:id="@+id/action_about"
         android:title="@string/about"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_online"
+        android:title="@string/menu_online"
+        app:showAsAction="never" />
+
 </menu>

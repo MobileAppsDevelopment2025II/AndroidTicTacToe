@@ -1,5 +1,6 @@
 package co.edu.unal.tictactoe
 
+import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
@@ -13,6 +14,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.appbar.MaterialToolbar
+import co.edu.unal.tictactoe.online.OnlineGameActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -164,6 +166,10 @@ class MainActivity : AppCompatActivity() {
             R.id.action_difficulty -> { showDifficultyDialog(); true }
             R.id.action_quit -> { confirmQuitDialog(); true }
             R.id.action_about -> { showAboutDialog(); true }
+            R.id.action_online -> {
+                startActivity(Intent(this, OnlineGameActivity::class.java))
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
