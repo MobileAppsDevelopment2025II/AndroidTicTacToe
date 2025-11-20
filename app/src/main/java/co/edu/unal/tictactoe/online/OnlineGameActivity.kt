@@ -1,5 +1,6 @@
 package co.edu.unal.tictactoe.online
 
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.MotionEvent
 import android.widget.*
@@ -33,6 +34,12 @@ class OnlineGameActivity : AppCompatActivity() {
     private var currentGameId: String? = null
     private var currentGame: OnlineGame? = null
     private var registration: ListenerRegistration? = null
+
+    private var mHumanMediaPlayer: MediaPlayer? = null
+    private var mComputerMediaPlayer: MediaPlayer? = null
+
+    // Para detectar qué casilla cambió entre un snapshot y otro
+    private var lastBoard: List<String>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -207,7 +214,11 @@ class OnlineGameActivity : AppCompatActivity() {
     }
 
     private fun updateUiFromGame(game: OnlineGame) {
-        // 1. Volcar estado al modelo local para que BoardView pinte bien
+        // 0. Guardar el tablero anterior y actualizar lastBoard
+        val previousBoard = lastBoard
+        lastBoard = game.board.toList()
+
+        // 1. Actualizar el modelo gráfico para que BoardView pinte bien
         mGame.clearBoard()
 
         val xChar = TicTacToeGame.HUMAN_PLAYER
@@ -221,21 +232,42 @@ class OnlineGameActivity : AppCompatActivity() {
         }
         mBoardView.invalidate()
 
-        // 2. Pintar el código de la partida
-        if (game.code.isNotEmpty()) {
-            mCodeTextView.text = "${getString(R.string.online_code_label)} ${game.code}"
-        } else {
-            mCodeTextView.text = ""
-        }
-
-        // 3. Mensaje de estado
+        // 2. Identificar quién soy yo (host = X, guest = O)
         val uid = auth.currentUser?.uid
         val isHost = uid != null && uid == game.hostId
         val mySymbol = if (isHost) "X" else "O"
 
+        // 3. Detectar qué casilla cambió y reproducir sonido
+        if (previousBoard != null && previousBoard.size == game.board.size) {
+            var changedIndex = -1
+            for (i in game.board.indices) {
+                if (previousBoard[i] != game.board[i]) {
+                    changedIndex = i
+                    break
+                }
+            }
+
+            if (changedIndex != -1) {
+                val newSymbol = game.board[changedIndex]
+                if (newSymbol == mySymbol) {
+                    mHumanMediaPlayer?.start()
+                } else if (newSymbol.isNotEmpty()) {
+                    mComputerMediaPlayer?.start()
+                }
+            }
+        }
+
+        // 4. Mostrar el código de la partida
+        if (game.code.isNotEmpty()) {
+            mCodeTextView.text = "Code: ${game.code}"
+        } else {
+            mCodeTextView.text = ""
+        }
+
+        // 5. Mensaje de estado
         val statusText = when {
             game.status == "waiting" ->
-                getString(R.string.online_waiting)
+                "Share this code and wait for the other player."
 
             game.status == "playing" && game.currentTurn == uid ->
                 "Your turn ($mySymbol)"
@@ -257,6 +289,7 @@ class OnlineGameActivity : AppCompatActivity() {
 
         mInfoTextView.text = statusText
     }
+
 
 
     private fun handleBoardTouch(x: Float, y: Float) {
@@ -365,4 +398,21 @@ class OnlineGameActivity : AppCompatActivity() {
         super.onDestroy()
         registration?.remove()
     }
+
+
+    override fun onResume() {
+        super.onResume()
+        // Usa los mismos audios de la versión vs máquina
+        mHumanMediaPlayer = MediaPlayer.create(applicationContext, R.raw.move_human)
+        mComputerMediaPlayer = MediaPlayer.create(applicationContext, R.raw.move_cpu)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        try { mHumanMediaPlayer?.release() } catch (_: Exception) {}
+        try { mComputerMediaPlayer?.release() } catch (_: Exception) {}
+        mHumanMediaPlayer = null
+        mComputerMediaPlayer = null
+    }
+
 }

@@ -69,10 +69,20 @@
     </LinearLayout>
 
     <!-- Tu BoardView custom, mismo id que en activity_main -->
-    <co.edu.unal.tictactoe.BoardView
-        android:id="@+id/board"
+    <!-- Sustituye el BoardView que tenías por este bloque -->
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:gravity="center_horizontal">
+
+        <co.edu.unal.tictactoe.BoardView
+            android:id="@+id/board"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center_horizontal"/>
+    </FrameLayout>
+
 
 </LinearLayout>
